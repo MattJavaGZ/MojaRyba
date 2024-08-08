@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}">
+<body>
+<div class="container">
+    <main class="main-content" layout:fragment="content">
+
+        <div th:replace="~{fragments/fish-list :: list}"></div>
+
+        <form th:if="${page != null}" action="#" th:action="@{${url}}" class="form-page">
+            <button th:if="${page > 0}" type="submit" name="page" th:value="${page-1}">Poprzednia</button>
+            <p th:text="|Strona ${page+1}|"></p>
+            <button th:if="${page < totalPages - 1}" type="submit" name="page" th:value="${page+1}">Następna</button>
+        </form>
+
+    </main>
+</div>
+</body>
+</html>

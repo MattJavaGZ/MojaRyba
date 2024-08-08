@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Dziennik połowów</title>
+</head>
+<body>
+<main class="main-content" layout:fragment="content">
+    <div th:replace="~{fragments/user-panel-categories :: categories}"></div>
+    <h2 class="list-heading">Wyszukaj swoje złowione okazy</h2>
+    <div class="fishing-log-container">
+        <div class="find-section">
+            <h3>Szukaj po dacie</h3>
+            <form action="#" th:action="@{/panel/dziennik-polowow/data}" class="form-user-log">
+                <label for="start-date">Data początkowa</label>
+                <input type="date" id="start-date" name="start" required>
+                <label for="end-date">Data końćowa</label>
+                <input type="date" id="end-date" name="end" required>
+                <button type="submit">Szukaj</button>
+            </form>
+        </div>
+        <div class="find-section">
+            <h3>Szukaj po gatunku</h3>
+            <form action="#" th:action="@{/panel/dziennik-polowow/gatunek}" class="form-user-log">
+                <label for="type">Wybierz gatunek</label>
+                <select id="type" name="type" required>
+                    <option value="" hidden>Wybierz gatunek</option>
+                    <option th:each="type: ${types}" th:value="${type.name}" th:text="${type.name}"></option>
+                </select>
+                <button type="submit">Szukaj</button>
+            </form>
+        </div>
+        <div class="find-section">
+            <h3>Szukaj swoje okazy</h3>
+            <form action="#" th:action="@{/panel/dziennik-polowow/szukaj}" class="form-user-log">
+                <label for="find-by-title">Czego szukasz ?</label>
+                <input type="text" id="find-by-title" name="find" required>
+                <button type="submit">Szukaj</button>
+            </form>
+        </div>
+    </div>
+
+    <div th:if="${fishes}" class="fishing-log-summary">
+        <h3 th:text="${summary}">Ilość złowionych ryb</h3>
+        <div th:replace="~{fragments/fish-list :: list}"></div>
+    </div>
+
+</main>
+</body>
+</html>

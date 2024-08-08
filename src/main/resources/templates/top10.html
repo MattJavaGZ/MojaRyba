@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Top10</title>
+</head>
+<body>
+    <main class="main-content" layout:fragment="content">
+
+        <section class="user-panel-categories" >
+            <ul>
+                <li><a href="#" th:href="@{/top10/oceniane}">Najlepiej oceniane</a></li>
+                <li><a href="#" th:href="@{/top10/lubiane}">Najbardziej lubiane</a></li>
+            </ul>
+        </section>
+
+        <div th:replace="~{fragments/fish-list :: list}"></div>
+    </main>
+</body>
+</html>

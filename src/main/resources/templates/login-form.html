@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Formularz logowania</title>
+</head>
+<body>
+<main class="main-content" layout:fragment="content">
+    <h1 class="list-heading">Logowanie</h1>
+
+    <p th:if="${param.error}"
+       th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"
+       class="error-login-message">
+        Błąd logowania.
+    </p>
+    <p class="notification" th:if="${notification}" th:text="${notification}">
+        Belka z powiadomieniami
+    </p>
+
+    <form th:action="@{/login}" method="post" class="form">
+        <label for="username">Adres email:</label>
+        <input type="text" id="username" name="username" placeholder="jan@example.pl">
+        <label for="password">Hasło:</label>
+        <input type="password" id="password" name="password" placeholder="hasło">
+        <button type="submit" class="form-button">Zaloguj</button>
+    </form>
+    <p class="register-link">Nie pamiętasz hasła: <a href="#" th:href="@{/przypomnienie-hasla}"> Przypomnij hasło</a>
+    </p>
+    <p class="register-link">Nie masz konta: <a href="#" th:href="@{/rejestracja}">Zarejestruj się</a></p>
+</main>
+</body>
+</html>

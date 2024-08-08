@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pl"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Moja-Ryba</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+          integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="../static/styles/main.css" th:href="@{/styles/main.css}">
+    <script defer src="../static/scripts/common.js" th:src="@{/scripts/common.js}"></script>
+</head>
+<body>
+<div class="container">
+<ul class="menu">
+    <li class="menu-logo-container">
+        <a href="#" th:href="@{/}">
+            <i class="fa-sharp fa-solid fa-fish logo"></i> Moja-Ryba
+        </a>
+    </li>
+    <li class="menu-toggle">
+        <a href="#"><i id="toggle-icon" class="far fa-plus-square"></i> Menu</a>
+    </li>
+    <li class="menu-item">
+        <i class="fa-duotone fa-plus fa-beat fa-2xl" style="color: red"></i>
+        <a href="#" th:href="@{/dodaj-okaz}" >Dodaj</a>
+    </li>
+    <li class="menu-item">
+        <a href="#" th:href="@{/gatunki}">Gatunki</a>
+    </li>
+    <li class="menu-item">
+        <a href="#" th:href="@{/top10/oceniane}">Top10</a>
+    </li>
+    <li class="menu-item">
+        <a href="#" th:href="@{/search-form}">Wyszukaj</a>
+    </li>
+    <li class="menu-item">
+        <i class="fa-solid fa-heart" style="color: red"></i>
+        <a href="#" th:href="@{/favorite}" th:text="|Ulubione (${@favorite.getFavoriteSize()})|">Ulubione (0)</a>
+    </li>
+    <li class="menu-item">
+        <a href="#" th:href="@{/panel}" class="account-button">Konto</a>
+    </li>
+    <li class="menu-item" >
+        <a sec:authorize="isAuthenticated()" href="#" th:href="@{/logout} ">Wyloguj</a>
+        <a sec:authorize="!isAuthenticated()" href="#" th:href="@{/login} ">Zaloguj</a>
+    </li>
+</ul>
+<header class="jumbotron">
+    <h1 class="jumbotron-header">Moja-Ryba</h1>
+    <p class="jumbotron-description">
+        Witaj na stronie Moja-Ryba. Wstawiaj swoje złowione ryby. Przeglądaj, oceniam i komentuj piękne okazy
+        kolegów po kiju!
+    </p>
+</header>
+    <main class="main-content" layout:fragment="content">
+
+    </main>
+    <footer class="footer">
+        <p>Moja-Ryba.pl</p>
+        <a href="#" th:href="@{/kontakt}">Kontakt</a>
+    </footer>
+</div>
+</body>
+</html>

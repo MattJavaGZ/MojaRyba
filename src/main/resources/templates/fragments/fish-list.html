@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}" xmlns="http://www.w3.org/1999/html">
+<body>
+    <div th:fragment="list">
+
+      <h2 class="list-heading" th:text="${heading}">Najnowsze rybki</h2>
+      <p class="list-description" th:if="!${fishes.isEmpty()}" th:text="${description}">W tej sekcji znajdziesz
+        najnowsze okazy naszych użytkowników </p>
+      <p class="list-description" th:if="${fishes.isEmpty()}">Brak okazów do wyświetlenia :(</p>
+      <ul class=fish-list th:remove="all-but-first">
+        <li class="fish-list-item" th:each="fish: ${fishes}">
+          <div class="poster-container">
+          <a href="#" th:href="@{|/okaz/${fish.id}|}">
+            <img src="../static/img/mat%20karp.jpg" th:src="@{|/photos/${fish.photos.get(0)}|}"
+                 alt="tytuł filmu"
+                 class="fish-list-item-poster">
+          </a>
+          </div>
+          <div class="fish-list-item-card">
+            <div class="fish-list-item-content">
+              <h3 class="fish-list-item-title">
+                <a href="#" th:href="@{|/okaz/${fish.id}|}" th:text="${fish.title}">Duży karp</a>
+              </h3>
+<!--              <h5 th:text="${fish.author}">Autor: Matt</h5>-->
+              <a href="#" th:href="@{|/gatunek/${fish.fishType}|}" th:text="${fish.fishType}">
+                Karp</a>
+              <p th:text="${fish.weight} ? 'Waga: '+${fish.weight}+ ' kg' : 'Waga: Brak'">Waga: 15kg</p>
+            </div>
+            <div class="fish-list-item-rating-and-like">
+              <div class="fish-list-item-rating">
+                Śr. ocen:
+                <i class="fas fa-star"></i>
+                <span th:text="${fish.ratingAvg}">8.7</span>
+              </div>
+            </div>
+          </div>
+          <div class="fish-list-like-favorite">
+            <a href="#"
+               th:href="${!@favorite.isExist(fish)} ? @{|/favorite/add/${fish.id}|} : @{|/favorite/delete/${fish.id}|}">
+              <i class="fa-heart" style="color: red"
+                 th:classappend="${!@favorite.isExist(fish)} ? 'fa-regular' : 'fa-solid'"></i>
+            </a>
+
+            <a href="#" th:href="@{|/like/${fish.id}|}" >
+              <i class="fa-thumbs-up fa-xl like"
+                 th:classappend="${fish.likedUserEmails.contains(#authentication.name)} ?
+                                   'fa-solid' : 'fa-regular'" th:text="|&nbsp${fish.likedUserEmails.size()}|"></i>
+            </a>
+            <!--                            <p th:text="|Like: ${fish.likedUserEmails.size()}|">Like: 11</p>-->
+          </div>
+
+        </li>
+
+        <li class="fish-list-item">
+          <a href="#">
+            <img src="../static/img/krzysiek%20karp.jpg"
+                 alt="tytuł filmu"
+                 class="fish-list-item-poster">
+          </a>
+          <div class="fish-list-item-card">
+            <div class="fish-list-item-content">
+              <h3 class="fish-list-item-title">
+                <a href="#">Wielki karp</a>
+              </h3>
+              <h4>Autor: Krzysiek</h4>
+              <p>Gatunek: Karp</p>
+              <p>Waga: 16kg</p>
+            </div>
+            <div class="fish-list-item-rating-and-like">
+              <div class="fish-list-item-rating">
+                Ocena:
+                <i class="fas fa-star"></i>
+                <span>8.7</span>
+              </div>
+              <div class="fish-list-like">
+                <button>
+                  <i class="fa-regular fa-thumbs-up fa-2xl like"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="fish-list-item">
+          <a href="#">
+            <img src="../static/img/NO.png"
+                 alt="tytuł filmu"
+                 class="fish-list-item-poster">
+          </a>
+          <div class="fish-list-item-card">
+            <div class="fish-list-item-content">
+              <h3 class="fish-list-item-title">
+                <a href="#">Duży karp</a>
+              </h3>
+              <h4>Autor: Matt</h4>
+              <p>Gatunek: Karp</p>
+              <p>Waga: 15kg</p>
+            </div>
+            <div class="fish-list-item-rating-and-like">
+              <div class="fish-list-item-rating">
+                Ocena:
+                <i class="fas fa-star"></i>
+                <span>8.7</span>
+              </div>
+              <div class="fish-list-like">
+                <button>
+                  <i class="fa-regular fa-thumbs-up fa-2xl like"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+</body>
+</html>

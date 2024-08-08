@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pl"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Formularz kontaktowy</title>
+</head>
+<body>
+<main class="main-content" layout:fragment="content">
+    <h2 class="list-heading">Wyślij wiadomość do obsługi portalu</h2>
+
+    <p class="notification" th:if="${notification}" th:text="${notification}">
+        Belka z powiadomieniami
+    </p>
+
+    <form class="form" action="#" th:action="@{/kontakt}" method="post">
+        <label for="name">Imię:</label>
+        <input type="text" id="name" name="name" placeholder="wpisz imię">
+        <label for="email">Adres email:</label>
+        <input type="email" id="email" name="email" placeholder="wpisz email" required>
+        <label for="message">Wiadomość:</label>
+        <textarea id="message" name="message"  rows="6" required></textarea>
+        <button type="submit" class="form-button">Wyślij</button>
+    </form>
+</main>
+</body>
+</html>

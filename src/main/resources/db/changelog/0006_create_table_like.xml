@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
+    <changeSet id="0006_1" author="Matt">
+        <createTable tableName="likes">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="fish_id" type="BIGINT"/>
+
+            <column name="user_id" type="BIGINT"/>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="likes" baseColumnNames="fish_id" constraintName="con_fish_like"
+                                 referencedTableName="fish" referencedColumnNames="id" onDelete="SET NULL"/>
+        <addForeignKeyConstraint baseTableName="likes" baseColumnNames="user_id" constraintName="con_user_like"
+                                 referencedTableName="users" referencedColumnNames="id" onDelete="SET NULL"/>
+    </changeSet>
+</databaseChangeLog>

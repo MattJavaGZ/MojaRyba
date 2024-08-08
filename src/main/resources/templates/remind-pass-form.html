@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Przypomnienie hasła</title>
+</head>
+<body>
+  <main class="main-content" layout:fragment="content">
+    <h1 class="list-heading">Przypomnienie hasła</h1>
+
+    <p class="notification" th:if="${notification}" th:text="${notification}">
+      Belka z powiadomieniami
+    </p>
+
+    <form class="form" th:action="@{/przypomnienie-hasla}" method="post">
+      <label for="email" >Podaj adres email, który jest loginem do Twojego konta</label>
+      <input type="email" id="email" name="email" required>
+      <button class="form-button" type="submit" >Wyślij przypomnienie</button>
+    </form>
+
+  </main>
+</body>
+</html>

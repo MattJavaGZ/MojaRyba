@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Ustaw nowe hasło</title>
+</head>
+<body>
+    <main class="main-content" layout:fragment="content">
+        <h1 class="list-heading">Ustawe nowe hasło</h1>
+
+        <form class="form" th:action="@{|/ustaw-nowe-haslo/${id}|}" method="post">
+            <input type="text" hidden name="activKey" th:value="${activKey}">
+            <label for="password" >Podaj nowe hasło (min 8 znaków)</label>
+            <input type="password" id="password" name="password" required>
+            <button class="form-button" type="submit" >Zmień hasło</button>
+        </form>
+    </main>
+</body>
+</html>

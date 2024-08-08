@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Formularz dodawania okazu</title>
+</head>
+<body>
+<main class="main-content" layout:fragment="content">
+
+    <h1 class="list-heading">Dodaj swój okaz</h1>
+    <p class="list-description">Pola wymagane oznaczone *</p>
+
+    <form action="#" th:action="@{/dodaj-okaz}" method="post" enctype="multipart/form-data" th:object="${fish}"
+          class="form">
+
+        <label for="title">Tytuł *</label>
+        <input type="text" id="title" th:field="*{title}" placeholder="Piekny karp" required>
+        <p th:errors="*{title}">Błędy związane z tytułem</p>
+
+        <label for="type">Gatunek *</label>
+        <select id="type" th:field="*{fishType}" required>
+            <option value="" hidden>Wybierz kategorie</option>
+            <option th:each="type: ${types}" th:value="${type.name}" th:text="${type.name}"></option>
+        </select>
+
+        <div id="photos-add-container">
+            <label for="file-input">Zdjęcie główne *</label>
+            <input id="file-input" type="file" th:field="*{photos}" accept="image/jpeg, image/png" required>
+        </div>
+        <button id="add-photo-button" type="button">Dodaj kolejne zdjęcie</button>
+
+        <label for="weight">Waga w kg</label>
+        <input type="number" id="weight" th:field="*{weight}">
+        <p th:errors="*{weight}">Błędy związane z wagą</p>
+
+        <label for="lenght">Długość w cm</label>
+        <input type="number" id="lenght" th:field="*{length}">
+        <p th:errors="*{length}">Błędy związane z długością</p>
+
+        <label for="bait">Przynęta</label>
+        <input type="text" id="bait" th:field="*{bait}">
+        <p th:errors="*{bait}">Błędy związane z przynętą</p>
+
+        <label for="fishingMethod">Metoda połowu</label>
+        <input type="text" id="fishingMethod" th:field="*{fishingMethod}">
+        <p th:errors="*{fishingMethod}">Błędy związane z metodą połowu</p>
+
+        <label for="fishingSpot">Nazwa łowiska</label>
+        <input type="text" id="fishingSpot" th:field="*{fishingSpot}">
+        <p th:errors="*{fishingSpot}">Błędy związane z nazwą łowiska</p>
+
+        <label for="description">Pełny opis okazu</label>
+        <textarea id="description" th:field="*{description}" rows="6"></textarea>
+
+        <button  type="submit" class="form-button">Dodaj okaz</button>
+    </form>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
+<changeSet id="0005_1" author="Matt">
+    <createTable tableName="rating">
+        <column name="id" type="BIGINT" autoIncrement="true">
+            <constraints primaryKey="true" nullable="false"/>
+        </column>
+        <column name="fish_id" type="BIGINT" />
+
+        <column name="user_id" type="BIGINT"/>
+
+        <column name="rating" type="INT"/>
+
+    </createTable>
+    <addForeignKeyConstraint baseTableName="rating" baseColumnNames="fish_id" constraintName="con_fish_rating"
+                             referencedTableName="fish" referencedColumnNames="id" onDelete="SET NULL"/>
+    <addForeignKeyConstraint baseTableName="rating" baseColumnNames="user_id" constraintName="con_user_rating"
+                             referencedTableName="users" referencedColumnNames="id" onDelete="SET NULL"/>
+</changeSet>
+
+</databaseChangeLog>
