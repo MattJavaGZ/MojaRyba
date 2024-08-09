@@ -35,7 +35,8 @@ public class CustomSecurityService {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout/**", HttpMethod.GET.name()))
                 .logoutSuccessUrl("/")
         );
-        http.csrf(csrt -> csrt.ignoringRequestMatchers(PathRequest.toH2Console()));
+//        http.csrf(csrt -> csrt.ignoringRequestMatchers(PathRequest.toH2Console()));
+        http.csrf().ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**"));
         http.headers().frameOptions().sameOrigin();
 
         return http.build();
