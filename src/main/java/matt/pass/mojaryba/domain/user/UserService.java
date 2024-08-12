@@ -44,7 +44,7 @@ public class UserService {
 
     public void register(UserRegisterDto userRegisterDto) throws EmailException {
         final User userToSave = new User();
-        userToSave.setEmail(userRegisterDto.getEmail());
+        userToSave.setEmail(userRegisterDto.getEmail().toLowerCase());
         userToSave.setNick(userRegisterDto.getNick());
         final String encodePassword = passwordEncoder.encode(userRegisterDto.getPassword());
         userToSave.setPassword(encodePassword);
