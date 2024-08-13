@@ -19,14 +19,15 @@ public class RegisterController {
     }
 
     @GetMapping("/rejestracja")
-    String registerForm(Model model){
+    String registerForm(Model model) {
         final UserRegisterDto user = new UserRegisterDto();
         model.addAttribute("user", user);
         return "register-form";
     }
+
     @PostMapping("/rejestracja")
-    String register(Model model, @Valid @ModelAttribute(name = "user") UserRegisterDto user, BindingResult bindingResult)  {
-        if (bindingResult.hasErrors()){
+    String register(Model model, @Valid @ModelAttribute(name = "user") UserRegisterDto user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             return "register-form";
         } else {
             try {
@@ -36,7 +37,8 @@ public class RegisterController {
                         "Na Twój adres email została wysłana wiadomość z linkiem aktywacyjnym. Aktywuj konto");
                 return "activation-page";
             } catch (EmailException e) {
-               e.printStackTrace();
+                System.err.println("Problem z wysyłką email");
+                e.printStackTrace();
                 model.addAttribute("heading", "Błąd podczas rejestracji");
                 model.addAttribute("description",
                         "Nie udało się wysłać wiadomości z linkiem aktywacyjny. Dokonaj rejestracji ponownie");
@@ -45,6 +47,7 @@ public class RegisterController {
 
         }
     }
+
     @GetMapping("/aktywacja/{id}")
     String activation(Model model, @PathVariable long id, @RequestParam String activKey, RedirectAttributes redirectAttributes) {
         final boolean activationSuccess = userService.checkAndActivUserAccount(id, activKey);

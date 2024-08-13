@@ -16,4 +16,4 @@ app:
   storage:
     location: uploads/photos/
   email:
-    url: http://moja-ryba.pl
+    url: https://moja-ryba.pl
