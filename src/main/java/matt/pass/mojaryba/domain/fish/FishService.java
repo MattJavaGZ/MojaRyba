@@ -156,6 +156,18 @@ public class FishService {
                 .limit(10)
                 .toList();
     }
+    public List<FishDto> getTop10BigestFishes() {
+       return fishRepository.findAllByWeightGreaterThan(0).stream()
+               .map(FishMapper::map)
+               .sorted(new Comparator<FishDto>() {
+                   @Override
+                   public int compare(FishDto o1, FishDto o2) {
+                       return -Double.compare(o1.getWeight(), o2.getWeight());
+                   }
+               })
+               .limit(10)
+               .toList();
+    }
 
     public List<FishDto> searchFishes(String userSearch) {
         final List<Fish> allFishes = fishRepository.findAll();

@@ -2,8 +2,6 @@ package matt.pass.mojaryba.web;
 
 import matt.pass.mojaryba.domain.comment.CommentService;
 import matt.pass.mojaryba.domain.comment.dto.CommentDto;
-import matt.pass.mojaryba.domain.fish.Fish;
-import matt.pass.mojaryba.domain.fish.FishRepository;
 import matt.pass.mojaryba.domain.fish.FishService;
 import matt.pass.mojaryba.domain.fish.dto.FishDto;
 import matt.pass.mojaryba.domain.rating.RatingService;
@@ -67,8 +65,16 @@ public class FishController {
     String top10Liked(Model model) {
         final List<FishDto> top10LikedFishes = fishService.getTop10LikedFishes();
         model.addAttribute("heading", "Top10");
-        model.addAttribute("description", "W tej sekcji znajdziesz najbaerdziej lubiane okazy");
+        model.addAttribute("description", "W tej sekcji znajdziesz najbardziej lubiane okazy");
         model.addAttribute("fishes", top10LikedFishes);
+        return "top10";
+    }
+    @GetMapping("/top10/najwieksze")
+    String top10Bigest(Model model) {
+        final List<FishDto> top10BigestFishes = fishService.getTop10BigestFishes();
+        model.addAttribute("heading", "Top10");
+        model.addAttribute("description", "W tej sekcji znajdziesz największe/najcięższe ryby");
+        model.addAttribute("fishes", top10BigestFishes);
         return "top10";
     }
 
