@@ -19,5 +19,5 @@ server:
       timeout: 43200
 
   tomcat:
-    relaxed-path-chars: [\]^`{|}<>
-    relaxed-query-chars: [\]^`{|}<>
+    relaxed-path-chars: ["|", "{", "}", "^", "`", "[", "]"]
+    relaxed-query-chars: ["|", "{", "}", "^", "`", "[", "]"]
