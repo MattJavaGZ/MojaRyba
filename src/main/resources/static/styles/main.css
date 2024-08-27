@@ -441,8 +441,12 @@ a {
 
 .comment {
     border-radius: 10px;
-    border-style: groove;
+    border: 2px black solid;
+    border-right: none;
+    border-left: none;
+    border-top: none;
     list-style: none;
+    margin-top: 5px;
 }
 
 .comments-list {
