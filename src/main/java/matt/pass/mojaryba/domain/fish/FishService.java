@@ -259,4 +259,7 @@ public class FishService {
                 .map(FishMapper::mapToSave)
                 .orElseThrow();
     }
+    public boolean fishDtoExist(FishDto fishDto) {
+        return fishRepository.existsById(fishDto.getId());
+    }
 }

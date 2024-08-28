@@ -134,6 +134,7 @@ a {
     /*border: 2px royalblue solid;*/
     border-radius: 0 5px 5px 0;
     border-style: groove;
+    border-width: 2px;
     /*min-height: 200px;*/
 }
 
@@ -292,9 +293,14 @@ a {
     margin-top: 16px;
     padding: 16px;
     border-radius: 10px;
-    border-style: groove;
+    border-style: solid;
+    border-width: 1px;
+    /*border-color: black;*/
 }
-
+.comments-section {
+    margin-top: 16px;
+    padding: 16px;
+}
 
 .fish-section-heading {
     margin-bottom: 8px;
@@ -534,7 +540,7 @@ a {
 
 .fishing-log-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     flex-wrap: wrap;
 }
 
@@ -545,6 +551,7 @@ a {
 .find-section {
     border-radius: 5px;
     border-style: groove;
+    margin-bottom: 15px;
 }
 
 .form-user-log {

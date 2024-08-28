@@ -8,7 +8,7 @@ public class CommentMapper {
         return new CommentDto(
                 comment.getId(),
                 comment.getContent(),
-                comment.getUser().getNick(),
+                comment.getUser() == null ? "Konto usunięte" : comment.getUser().getEmail(),
                 comment.getDateAdded()
         );
     }
