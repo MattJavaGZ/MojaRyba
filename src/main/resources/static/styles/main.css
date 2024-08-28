@@ -22,6 +22,15 @@ a {
     background-color: lavender;
 }
 
+.fish-list-item-title {
+    font-size: 1rem;
+}
+
+.fish-list-item-content,
+.fish-list-item-rating {
+    font-size: 0.8rem;
+}
+
 .main-content {
     flex: 1;
 }
@@ -87,6 +96,11 @@ a {
 
     .fish-list-item-title {
         font-size: 1.2rem;
+    }
+
+    .fish-list-item-content,
+    .fish-list-item-rating {
+        font-size: 0.9rem;
     }
 
     .fish-favorite {
@@ -167,17 +181,10 @@ a {
     margin: 5px 0;
 }
 
-.fish-list-item-title {
-    font-size: 1.6rem;
-}
-
 .fish-list-item-title > a {
     color: black;
 }
 
-.fish-list-item-rating {
-    font-size: 1.2rem;
-}
 
 .fish-list-item-rating * {
     color: royalblue;
@@ -297,6 +304,7 @@ a {
     border-width: 1px;
     /*border-color: black;*/
 }
+
 .comments-section {
     margin-top: 16px;
     padding: 16px;
@@ -530,6 +538,7 @@ a {
 .user-panel-categories > ul > li:nth-child(even) {
     background-color: cornflowerblue;
 }
+
 .user-panel-categories > ul > li:nth-child(last) {
     background-color: red;
 }
@@ -623,6 +632,7 @@ a {
     margin: 5px;
     font-size: small;
 }
+
 .fish-title {
     text-align: center;
     margin-top: 16px;
