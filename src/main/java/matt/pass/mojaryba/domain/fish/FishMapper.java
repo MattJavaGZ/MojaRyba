@@ -8,6 +8,7 @@ import matt.pass.mojaryba.domain.rating.Rating;
 import matt.pass.mojaryba.domain.user.User;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class FishMapper {
 
@@ -31,10 +32,15 @@ public class FishMapper {
                         .toList(),
                 ratingAvg,
                 fish.getRatings().size(),
-                fish.getLikes().stream().map(Like::getUser).map(User::getEmail).toList(),
+                fish.getLikes().stream()
+                        .map(Like::getUser)
+                        .filter(Objects::nonNull)
+                        .map(User::getEmail)
+                        .toList(),
                 fish.getUser() == null ? "Usunięty" : fish.getUser().getNick()
         );
     }
+
     public static FishToSaveDto mapToSave(Fish fish) {
         return new FishToSaveDto(
                 fish.getTitle(),
