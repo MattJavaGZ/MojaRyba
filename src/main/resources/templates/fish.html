@@ -50,22 +50,20 @@
             </div>
         </div>
         <div class="fish-favorite">
-            <!--            <a href="#"-->
-            <!--               th:href="${!@favorite.isExist(fish)} ? @{|/favorite/add/${fish.id}|} : @{|/favorite/delete/${fish.id}|}">-->
-            <!--                <i class="fa-heart" style="color: red"-->
-            <!--                   th:classappend="${!@favorite.isExist(fish)} ? 'fa-regular' : 'fa-solid'"-->
-            <!--                   th:text="${!@favorite.isExist(fish)} ? ' Dodaj do ulubionych' : ' Usuń z ulubionych'"></i>-->
-            <!--            </a>-->
+
             <a href="#" th:href="@{|/admin/usun/${fish.id}|}" sec:authorize="hasRole('ADMIN')" class="admin-delete">
                 Usuń okaz
             </a>
-
-            <a sec:authorize="!hasRole('ADMIN')" th:if="${fish.author}==${currentUserNick}" href="#" th:href="@{|/okaz/edytuj/${fish.id}|}" class="admin-delete">
-                Edytuj swój okaz
-            </a>
-            <a sec:authorize="hasRole('ADMIN')" href="#" th:href="@{|/okaz/edytuj/${fish.id}|}" class="admin-delete">
+            <a th:if="${edit}" href="#" th:href="@{|/okaz/edytuj/${fish.id}|}" class="admin-delete">
                 Edytuj okaz
             </a>
+
+<!--            <a sec:authorize="!hasRole('ADMIN')" th:if="${fish.author}==${currentUserNick}" href="#" th:href="@{|/okaz/edytuj/${fish.id}|}" class="admin-delete">-->
+<!--                Edytuj swój okaz-->
+<!--            </a>-->
+<!--            <a sec:authorize="hasRole('ADMIN')" href="#" th:href="@{|/okaz/edytuj/${fish.id}|}" class="admin-delete">-->
+<!--                Edytuj okaz-->
+<!--            </a>-->
 
             <a th:if="${!@favorite.isExist(fish)}" href="#" th:href="@{|/favorite/add/${fish.id}|}">
                 <i class="fa-regular fa-heart favorite-icon"></i>
