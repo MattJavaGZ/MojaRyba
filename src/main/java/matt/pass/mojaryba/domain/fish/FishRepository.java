@@ -12,5 +12,6 @@ public interface FishRepository extends JpaRepository<Fish, Long> {
      List<Fish> findAllByFishType_NameAndUser_Email(String fishTypeName, String UserEmail);
      List<Fish> findAllByLikesIsNotNull();
      List<Fish> findAllByWeightGreaterThan(double weight);
+     List<Fish> findAllByUser_Nick(String nick);
 
 }
