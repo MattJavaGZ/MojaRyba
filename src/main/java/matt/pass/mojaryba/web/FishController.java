@@ -5,6 +5,8 @@ import matt.pass.mojaryba.domain.comment.dto.CommentDto;
 import matt.pass.mojaryba.domain.fish.FishService;
 import matt.pass.mojaryba.domain.fish.dto.FishDto;
 import matt.pass.mojaryba.domain.rating.RatingService;
+import matt.pass.mojaryba.domain.user.User;
+import matt.pass.mojaryba.domain.user.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -21,12 +23,14 @@ public class FishController {
      private final FishService fishService;
      private final RatingService ratingService;
      private final CommentService commentService;
+     private final UserService userService;
 
 
-    public FishController(FishService fishService, RatingService ratingService, CommentService commentService) {
+    public FishController(FishService fishService, RatingService ratingService, CommentService commentService, UserService userService) {
         this.fishService = fishService;
         this.ratingService = ratingService;
         this.commentService = commentService;
+        this.userService = userService;
     }
 
     @GetMapping("/okaz/{id}")
@@ -37,10 +41,10 @@ public class FishController {
 
         if (authentication != null) {
             final String userEmail = authentication.getName();
-            final boolean isAdminOrAuthor = fishService.verificationFishAuthorOrAdmin(id);
+            final User user = userService.findUserByEmail(userEmail).orElseThrow();
             final Integer currentRating = ratingService.getCurrentRating(userEmail, id);
             model.addAttribute("currentRating", currentRating);
-            model.addAttribute("edit", isAdminOrAuthor);
+            model.addAttribute("currentUserNick", user.getNick());
         }
 
         List<CommentDto> commentsForFish = commentService.getCommentsForFish(id);
