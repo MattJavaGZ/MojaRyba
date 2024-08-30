@@ -18,10 +18,9 @@ import java.util.List;
 
 @Controller
 public class FishController {
-    private FishService fishService;
-    private RatingService ratingService;
-    private CommentService commentService;
-
+     private final FishService fishService;
+     private final RatingService ratingService;
+     private final CommentService commentService;
 
 
     public FishController(FishService fishService, RatingService ratingService, CommentService commentService) {
@@ -38,8 +37,10 @@ public class FishController {
 
         if (authentication != null) {
             final String userEmail = authentication.getName();
+            final boolean isAdminOrAuthor = fishService.verificationFishAuthorOrAdmin(id);
             final Integer currentRating = ratingService.getCurrentRating(userEmail, id);
             model.addAttribute("currentRating", currentRating);
+            model.addAttribute("edit", isAdminOrAuthor);
         }
 
         List<CommentDto> commentsForFish = commentService.getCommentsForFish(id);
@@ -47,20 +48,21 @@ public class FishController {
             model.addAttribute("comments", commentsForFish.stream()
                     .limit(5)
                     .toList());
-        }
-        else {
+        } else {
             model.addAttribute("comments", commentsForFish);
         }
         return "fish";
     }
+
     @GetMapping("/top10/oceniane")
-    String top10Rated (Model model) {
+    String top10Rated(Model model) {
         final List<FishDto> top10Fishes = fishService.getTop10RatedFishes();
         model.addAttribute("heading", "Top10");
         model.addAttribute("description", "W tej sekcji znajdziesz najlepiej ocenione okazy");
         model.addAttribute("fishes", top10Fishes);
         return "top10";
     }
+
     @GetMapping("/top10/lubiane")
     String top10Liked(Model model) {
         final List<FishDto> top10LikedFishes = fishService.getTop10LikedFishes();
@@ -69,6 +71,7 @@ public class FishController {
         model.addAttribute("fishes", top10LikedFishes);
         return "top10";
     }
+
     @GetMapping("/top10/najwieksze")
     String top10Bigest(Model model) {
         final List<FishDto> top10BigestFishes = fishService.getTop10BigestFishes();

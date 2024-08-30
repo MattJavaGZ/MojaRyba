@@ -17,26 +17,26 @@ import matt.pass.mojaryba.files.ImageService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class FishService {
     private final static int PAGE_SIZE = 15;
-    private FishRepository fishRepository;
-    private FishTypeRepository fishTypeRepository;
-    private ImageService imageService;
-    private FishPhotoRepository fishPhotoRepository;
-    private CommentRepository commentRepository;
-    private RatingRepository ratingRepository;
-    private LikeRepository likeRepository;
+    private final FishRepository fishRepository;
+    private final FishTypeRepository fishTypeRepository;
+    private final ImageService imageService;
+    private final FishPhotoRepository fishPhotoRepository;
+    private final CommentRepository commentRepository;
+    private final RatingRepository ratingRepository;
+    private final LikeRepository likeRepository;
 
     public FishService(FishRepository fishRepository, FishTypeRepository fishTypeRepository, ImageService imageService,
                        FishPhotoRepository fishPhotoRepository, CommentRepository commentRepository,
@@ -135,36 +135,21 @@ public class FishService {
         return fishRepository.findAll().stream()
                 .map(FishMapper::map)
                 .filter(fish -> fish.getRatingAvg() > 0)
-                .sorted(new Comparator<FishDto>() {
-                    @Override
-                    public int compare(FishDto o1, FishDto o2) {
-                        return -Double.compare(o1.getRatingAvg(), o2.getRatingAvg());
-                    }
-                })
+                .sorted((o1, o2) -> -Double.compare(o1.getRatingAvg(), o2.getRatingAvg()))
                 .limit(10)
                 .toList();
     }
     public List<FishDto> getTop10LikedFishes() {
         return fishRepository.findAllByLikesIsNotNull().stream()
                 .map(FishMapper::map)
-                .sorted(new Comparator<FishDto>() {
-                    @Override
-                    public int compare(FishDto o1, FishDto o2) {
-                        return -Integer.compare(o1.getLikedUserEmails().size(), o2.getLikedUserEmails().size());
-                    }
-                })
+                .sorted((o1, o2) -> -Integer.compare(o1.getLikedUserEmails().size(), o2.getLikedUserEmails().size()))
                 .limit(10)
                 .toList();
     }
     public List<FishDto> getTop10BigestFishes() {
        return fishRepository.findAllByWeightGreaterThan(0).stream()
                .map(FishMapper::map)
-               .sorted(new Comparator<FishDto>() {
-                   @Override
-                   public int compare(FishDto o1, FishDto o2) {
-                       return -Double.compare(o1.getWeight(), o2.getWeight());
-                   }
-               })
+               .sorted((o1, o2) -> -Double.compare(o1.getWeight(), o2.getWeight()))
                .limit(10)
                .toList();
     }
@@ -204,6 +189,12 @@ public class FishService {
 
     public List<FishDto> findAllByUserEmail(String userEmail) {
         return fishRepository.findAllByUser_Email(userEmail).stream()
+                .map(FishMapper::map)
+                .sorted()
+                .toList();
+    }
+    public List<FishDto> findAllByUserNick(String nick) {
+        return fishRepository.findAllByUser_Nick(nick).stream()
                 .map(FishMapper::map)
                 .sorted()
                 .toList();
@@ -261,5 +252,13 @@ public class FishService {
     }
     public boolean fishDtoExist(FishDto fishDto) {
         return fishRepository.existsById(fishDto.getId());
+    }
+    public boolean verificationFishAuthorOrAdmin(long fishId) {
+        final String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        final Fish fish = fishRepository.findById(fishId).orElseThrow();
+        boolean isAuthor = fish.getUser().getEmail().equals(userEmail);
+        boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+        return isAdmin || isAuthor;
     }
 }

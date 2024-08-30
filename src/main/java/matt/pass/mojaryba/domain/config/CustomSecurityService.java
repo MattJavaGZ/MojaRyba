@@ -26,6 +26,7 @@ public class CustomSecurityService {
                 .requestMatchers("/like/**").hasAnyRole(ADMIN_ROLE, USER_ROLE)
                 .requestMatchers("/dodaj-komentarz").hasAnyRole(ADMIN_ROLE, USER_ROLE)
                 .requestMatchers("/ocen-rybe").hasAnyRole(ADMIN_ROLE, USER_ROLE)
+                .requestMatchers("/okaz/edytuj/**").hasAnyRole(ADMIN_ROLE, USER_ROLE)
                 .requestMatchers("/panel/**").authenticated()
                 .anyRequest().permitAll()
         );
