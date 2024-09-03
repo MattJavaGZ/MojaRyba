@@ -52,8 +52,8 @@ public class UserService {
         userToSave.setActivKey(generateActivKey());
         final UserRole defaultRole = userRoleRepository.findByName(CustomSecurityService.USER_ROLE).orElseThrow();
         userToSave.getRoles().add(defaultRole);
-        final User savedUser = userRepository.save(userToSave);
-        emailService.sendActivEmail(savedUser);
+        emailService.sendActivEmail(userToSave);
+        userRepository.save(userToSave);
     }
 
     private String generateActivKey() {

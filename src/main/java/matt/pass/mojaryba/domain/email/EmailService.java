@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class EmailService {
-    private String url;
+    private final String url;
 
     public EmailService(@Value("${app.email.url}") String url) {
         this.url = url;
@@ -41,7 +41,7 @@ public class EmailService {
         SimpleEmail email = new SimpleEmail();
         email.setHostName("smtp.poczta.onet.pl");
         email.setSmtpPort(465);
-        email.setAuthenticator(new DefaultAuthenticator("matekjava@onet.pl", "Jakieshaslo123@"));
+        email.setAuthenticator(new DefaultAuthenticator("matekjava@onet.pl", "Jakieshaslo123@ "));
         email.setSSLOnConnect(true);
         email.setFrom("matekjava@onet.pl");
         email.setSubject(title);
@@ -77,10 +77,10 @@ public class EmailService {
                 Poniżej znajdziesz link służący do ustawienia nowego hasła:
                 %s
                 
-                Proszę o zignorowanie wiadomości jeżeli nie to nie Ty korzystałeś z przypomnienia hasła.    
-                 
-                Pozdrawiamy,        
-                        
+                Proszę o zignorowanie wiadomości jeżeli nie to nie Ty korzystałeś z przypomnienia hasła.
+                
+                Pozdrawiamy,
+                
                         """.formatted(user.getNick(), generateRemindPassUrl(user));
     }
     private String generateRemindPassUrl(User user){
