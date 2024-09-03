@@ -52,8 +52,8 @@ public class UserService {
         userToSave.setActivKey(generateActivKey());
         final UserRole defaultRole = userRoleRepository.findByName(CustomSecurityService.USER_ROLE).orElseThrow();
         userToSave.getRoles().add(defaultRole);
-        emailService.sendActivEmail(userToSave);
-        userRepository.save(userToSave);
+        final User savedUser = userRepository.save(userToSave);
+        emailService.sendActivEmail(savedUser);
     }
 
     private String generateActivKey() {
@@ -101,6 +101,10 @@ public class UserService {
 
     public void deleteUserById(long id) {
         userRepository.deleteById(id);
+    }
+    public void deleteUserByEmail (String email){
+        final Optional<User> userToDelete = userRepository.findByEmailIgnoreCase(email);
+        userToDelete.ifPresent(userRepository::delete);
     }
 
     public UserAdministrationDto findAdministrationUserById(long id) {

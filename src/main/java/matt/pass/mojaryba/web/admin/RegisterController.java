@@ -39,6 +39,7 @@ public class RegisterController {
             } catch (EmailException e) {
                 System.err.println("Problem z wysyłką email");
                 e.printStackTrace();
+                userService.deleteUserByEmail(user.getEmail());
                 model.addAttribute("heading", "Błąd podczas rejestracji");
                 model.addAttribute("description",
                         "Nie udało się wysłać wiadomości z linkiem aktywacyjny. Dokonaj rejestracji ponownie");
