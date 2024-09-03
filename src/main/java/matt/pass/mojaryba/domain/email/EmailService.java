@@ -41,7 +41,7 @@ public class EmailService {
         SimpleEmail email = new SimpleEmail();
         email.setHostName("smtp.poczta.onet.pl");
         email.setSmtpPort(465);
-        email.setAuthenticator(new DefaultAuthenticator("matekjava@onet.pl", "Jakieshaslo123@ "));
+        email.setAuthenticator(new DefaultAuthenticator("matekjava@onet.pl", "Jakieshaslo123@"));
         email.setSSLOnConnect(true);
         email.setFrom("matekjava@onet.pl");
         email.setSubject(title);
@@ -81,7 +81,7 @@ public class EmailService {
                 
                 Pozdrawiamy,
                 
-                        """.formatted(user.getNick(), generateRemindPassUrl(user));
+                """.formatted(user.getNick(), generateRemindPassUrl(user));
     }
     private String generateRemindPassUrl(User user){
         return String.format("%s/ustaw-nowe-haslo/%d?activKey=%s", url, user.getId(), user.getActivKey());
