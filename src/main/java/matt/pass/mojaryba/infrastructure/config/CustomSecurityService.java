@@ -1,4 +1,4 @@
-package matt.pass.mojaryba.domain.config;
+package matt.pass.mojaryba.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

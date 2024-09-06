@@ -13,7 +13,7 @@ import matt.pass.mojaryba.domain.rating.RatingRepository;
 import matt.pass.mojaryba.domain.type.FishType;
 import matt.pass.mojaryba.domain.type.FishTypeRepository;
 import matt.pass.mojaryba.domain.user.User;
-import matt.pass.mojaryba.files.ImageService;
+import matt.pass.mojaryba.infrastructure.files.ImageService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -58,133 +58,31 @@ public class FishService {
 //                .sorted()
                 .toList();
     }
-    public int totalPagesAllFishes(int page){
+
+    public int totalPagesAllFishes(int page) {
         Pageable pageable = getPageable(page);
         return fishRepository.findAll(pageable).getTotalPages();
     }
+
     private static Pageable getPageable(int page) {
         return PageRequest.of(page, PAGE_SIZE, Sort.by("dateAdded").descending());
     }
+
     public List<FishDto> findFishesByType(String typeName, int page) {
         Pageable pageable = getPageable(page);
         return fishRepository.findAllByFishType_Name(typeName, pageable).stream()
                 .map(FishMapper::map)
                 .toList();
     }
+
     public int totalPagesFishesByType(String typeName, int page) {
         Pageable pageable = getPageable(page);
         return fishRepository.findAllByFishType_Name(typeName, pageable).getTotalPages();
     }
+
     public Optional<FishDto> findById(long id) {
         return fishRepository.findById(id)
                 .map(FishMapper::map);
-    }
-
-
-    public long saveFish(FishToSaveDto fishToSaveDto, User user) {
-        final Fish fish = new Fish();
-        fish.setTitle(fishToSaveDto.getTitle());
-        fish.setDateAdded(LocalDateTime.now());
-        fish.setDescription(fishToSaveDto.getDescription());
-        fish.setWeight(fishToSaveDto.getWeight());
-        fish.setLength(fishToSaveDto.getLength());
-        fish.setFishingMethod(fishToSaveDto.getFishingMethod());
-        fish.setBait(fishToSaveDto.getBait());
-        fish.setFishingSpot(fishToSaveDto.getFishingSpot());
-        final FishType fishType = fishTypeRepository.findByName(fishToSaveDto.getFishType()).orElseThrow();
-        fish.setFishType(fishType);
-        fish.setUser(user);
-        final Fish savedFish = fishRepository.save(fish);
-        savePhotos(fishToSaveDto, savedFish);
-        return savedFish.getId();
-    }
-
-    private void savePhotos(FishToSaveDto fishToSaveDto, Fish savedFish) {
-        final List<MultipartFile> photos = fishToSaveDto.getPhotos();
-        for (MultipartFile photo : photos) {
-            if (!photo.isEmpty()) {
-                final String photoName = imageService.saveImage(photo);
-                final FishPhotos fishPhotosToSave = new FishPhotos();
-                fishPhotosToSave.setFish(savedFish);
-                fishPhotosToSave.setPhoto(photoName);
-                fishPhotoRepository.save(fishPhotosToSave);
-            }
-
-        }
-    }
-    @Transactional
-    public void editFish(FishToSaveDto fishToSave, long fishToEditId) {
-        final Fish fishToEdit = fishRepository.findById(fishToEditId).orElseThrow();
-        fishToEdit.setTitle(fishToSave.getTitle());
-        fishToEdit.setDescription(fishToSave.getDescription());
-        fishToEdit.setWeight(fishToSave.getWeight());
-        fishToEdit.setLength(fishToSave.getLength());
-        fishToEdit.setFishingMethod(fishToSave.getFishingMethod());
-        fishToEdit.setBait(fishToSave.getBait());
-        fishToEdit.setFishingSpot(fishToSave.getFishingSpot());
-        if (!fishToEdit.getFishType().getName().equals(fishToSave.getFishType())) {
-            final FishType fishType = fishTypeRepository.findByName(fishToSave.getFishType()).orElseThrow();
-            fishToEdit.setFishType(fishType);
-        }
-        if (!fishToSave.getPhotos().isEmpty()){
-            savePhotos(fishToSave, fishToEdit);
-        }
-    }
-
-    public List<FishDto> getTop10RatedFishes() {
-        return fishRepository.findAll().stream()
-                .map(FishMapper::map)
-                .filter(fish -> fish.getRatingAvg() > 0)
-                .sorted((o1, o2) -> -Double.compare(o1.getRatingAvg(), o2.getRatingAvg()))
-                .limit(10)
-                .toList();
-    }
-    public List<FishDto> getTop10LikedFishes() {
-        return fishRepository.findAllByLikesIsNotNull().stream()
-                .map(FishMapper::map)
-                .sorted((o1, o2) -> -Integer.compare(o1.getLikedUserEmails().size(), o2.getLikedUserEmails().size()))
-                .limit(10)
-                .toList();
-    }
-    public List<FishDto> getTop10BigestFishes() {
-       return fishRepository.findAllByWeightGreaterThan(0).stream()
-               .map(FishMapper::map)
-               .sorted((o1, o2) -> -Double.compare(o1.getWeight(), o2.getWeight()))
-               .limit(10)
-               .toList();
-    }
-
-    public List<FishDto> searchFishes(String userSearch) {
-        final List<Fish> allFishes = fishRepository.findAll();
-        return search(allFishes, userSearch);
-    }
-
-    public List<FishDto> searchInUserFishes(String userEmail, String userSearch) {
-        final List<Fish> allFishesByUser = fishRepository.findAllByUser_Email(userEmail);
-        return search(allFishesByUser, userSearch);
-    }
-
-    private List<FishDto> search(List<Fish> fishes, String userSearch) {
-        return fishes.stream()
-                .map(FishMapper::map)
-                .filter(fish -> searchInFish(fish, userSearch))
-                .sorted()
-                .toList();
-    }
-
-    private static boolean searchInFish(FishDto fish, String userSearch) {
-        final String[] userSearchSplit = userSearch.toLowerCase().split(" ");
-
-        for (String text : userSearchSplit) {
-            if (fish.getTitle().toLowerCase().contains(text) ||
-                    fish.getDescription().toLowerCase().contains(text) ||
-                    fish.getFishingMethod().toLowerCase().contains(text) ||
-                    fish.getFishingSpot().toLowerCase().contains(text) ||
-                    fish.getFishType().toLowerCase().contains(text) ||
-                    fish.getBait().toLowerCase().contains(text))
-                return true;
-        }
-        return false;
     }
 
     public List<FishDto> findAllByUserEmail(String userEmail) {
@@ -193,6 +91,7 @@ public class FishService {
                 .sorted()
                 .toList();
     }
+
     public List<FishDto> findAllByUserNick(String nick) {
         return fishRepository.findAllByUser_Nick(nick).stream()
                 .map(FishMapper::map)
@@ -240,19 +139,75 @@ public class FishService {
                 .sorted()
                 .toList();
     }
-    public void deleteFishById(long id){
-        final List<FishPhotos> photosToDelete = fishPhotoRepository.findAllByFish_Id(id);
-        imageService.deleteImages(photosToDelete);
-        fishRepository.deleteById(id);
-    }
-    public FishToSaveDto findByIdToSave(long id){
+
+    public FishToSaveDto findByIdToSave(long id) {
         return fishRepository.findById(id)
                 .map(FishMapper::mapToSave)
                 .orElseThrow();
     }
+
+    public long saveFish(FishToSaveDto fishToSaveDto, User user) {
+        final Fish fish = new Fish();
+        fish.setTitle(fishToSaveDto.getTitle());
+        fish.setDateAdded(LocalDateTime.now());
+        fish.setDescription(fishToSaveDto.getDescription());
+        fish.setWeight(fishToSaveDto.getWeight());
+        fish.setLength(fishToSaveDto.getLength());
+        fish.setFishingMethod(fishToSaveDto.getFishingMethod());
+        fish.setBait(fishToSaveDto.getBait());
+        fish.setFishingSpot(fishToSaveDto.getFishingSpot());
+        final FishType fishType = fishTypeRepository.findByName(fishToSaveDto.getFishType()).orElseThrow();
+        fish.setFishType(fishType);
+        fish.setUser(user);
+        final Fish savedFish = fishRepository.save(fish);
+        savePhotos(fishToSaveDto, savedFish);
+        return savedFish.getId();
+    }
+
+    private void savePhotos(FishToSaveDto fishToSaveDto, Fish savedFish) {
+        final List<MultipartFile> photos = fishToSaveDto.getPhotos();
+        for (MultipartFile photo : photos) {
+            if (!photo.isEmpty()) {
+                final String photoName = imageService.saveImage(photo);
+                final FishPhotos fishPhotosToSave = new FishPhotos();
+                fishPhotosToSave.setFish(savedFish);
+                fishPhotosToSave.setPhoto(photoName);
+                fishPhotoRepository.save(fishPhotosToSave);
+            }
+
+        }
+    }
+
+    @Transactional
+    public void editFish(FishToSaveDto fishToSave, long fishToEditId) {
+        final Fish fishToEdit = fishRepository.findById(fishToEditId).orElseThrow();
+        fishToEdit.setTitle(fishToSave.getTitle());
+        fishToEdit.setDescription(fishToSave.getDescription());
+        fishToEdit.setWeight(fishToSave.getWeight());
+        fishToEdit.setLength(fishToSave.getLength());
+        fishToEdit.setFishingMethod(fishToSave.getFishingMethod());
+        fishToEdit.setBait(fishToSave.getBait());
+        fishToEdit.setFishingSpot(fishToSave.getFishingSpot());
+        if (!fishToEdit.getFishType().getName().equals(fishToSave.getFishType())) {
+            final FishType fishType = fishTypeRepository.findByName(fishToSave.getFishType()).orElseThrow();
+            fishToEdit.setFishType(fishType);
+        }
+        if (!fishToSave.getPhotos().isEmpty()) {
+            savePhotos(fishToSave, fishToEdit);
+        }
+    }
+
+
     public boolean fishDtoExist(FishDto fishDto) {
         return fishRepository.existsById(fishDto.getId());
     }
+
+    public void deleteFishById(long id) {
+        final List<FishPhotos> photosToDelete = fishPhotoRepository.findAllByFish_Id(id);
+        imageService.deleteImages(photosToDelete);
+        fishRepository.deleteById(id);
+    }
+
     public boolean verificationFishAuthorOrAdmin(long fishId) {
         final String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         final Fish fish = fishRepository.findById(fishId).orElseThrow();

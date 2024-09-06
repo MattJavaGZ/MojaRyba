@@ -2,7 +2,6 @@ package matt.pass.mojaryba.domain.favorite;
 
 import matt.pass.mojaryba.domain.fish.FishService;
 import matt.pass.mojaryba.domain.fish.dto.FishDto;
-import matt.pass.mojaryba.domain.user.UserService;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
@@ -15,7 +14,7 @@ import java.util.stream.Collectors;
 @SessionScope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class Favorite {
 
-    private FishService fishService;
+    private final FishService fishService;
     private Set<FishDto> favorites = new HashSet<>();
 
     public Favorite(FishService fishService) {
@@ -46,7 +45,4 @@ public class Favorite {
                 .collect(Collectors.toSet());
     }
 
-    public void setFavorites(Set<FishDto> favorites) {
-        this.favorites = favorites;
-    }
 }

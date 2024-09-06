@@ -1,4 +1,4 @@
-package matt.pass.mojaryba.files;
+package matt.pass.mojaryba.infrastructure.files;
 
 import matt.pass.mojaryba.domain.photos.FishPhotos;
 import org.apache.commons.io.FilenameUtils;
