@@ -2,6 +2,7 @@ package matt.pass.mojaryba.web;
 
 import matt.pass.mojaryba.domain.comment.CommentService;
 import matt.pass.mojaryba.domain.comment.dto.CommentDto;
+import matt.pass.mojaryba.domain.fish.FishSearchAndTopService;
 import matt.pass.mojaryba.domain.fish.FishService;
 import matt.pass.mojaryba.domain.fish.dto.FishDto;
 import matt.pass.mojaryba.domain.rating.RatingService;
@@ -19,14 +20,16 @@ import java.util.List;
 @Controller
 public class FishController {
      private final FishService fishService;
+     private final FishSearchAndTopService fishSearchAndTopService;
      private final RatingService ratingService;
      private final CommentService commentService;
 
-
-    public FishController(FishService fishService, RatingService ratingService, CommentService commentService) {
-        this.fishService = fishService;
+    public FishController(FishSearchAndTopService fishSearchAndTopService, RatingService ratingService,
+                          CommentService commentService, FishService fishService) {
+        this.fishSearchAndTopService = fishSearchAndTopService;
         this.ratingService = ratingService;
         this.commentService = commentService;
+        this.fishService = fishService;
     }
 
     @GetMapping("/okaz/{id}")
@@ -57,7 +60,7 @@ public class FishController {
 
     @GetMapping("/top10/oceniane")
     String top10Rated(Model model) {
-        final List<FishDto> top10Fishes = fishService.getTop10RatedFishes();
+        final List<FishDto> top10Fishes = fishSearchAndTopService.getTop10RatedFishes();
         model.addAttribute("heading", "Top10");
         model.addAttribute("description", "W tej sekcji znajdziesz najlepiej ocenione okazy");
         model.addAttribute("fishes", top10Fishes);
@@ -66,7 +69,7 @@ public class FishController {
 
     @GetMapping("/top10/lubiane")
     String top10Liked(Model model) {
-        final List<FishDto> top10LikedFishes = fishService.getTop10LikedFishes();
+        final List<FishDto> top10LikedFishes = fishSearchAndTopService.getTop10LikedFishes();
         model.addAttribute("heading", "Top10");
         model.addAttribute("description", "W tej sekcji znajdziesz najbardziej lubiane okazy");
         model.addAttribute("fishes", top10LikedFishes);
@@ -75,7 +78,7 @@ public class FishController {
 
     @GetMapping("/top10/najwieksze")
     String top10Bigest(Model model) {
-        final List<FishDto> top10BigestFishes = fishService.getTop10BigestFishes();
+        final List<FishDto> top10BigestFishes = fishSearchAndTopService.getTop10BigestFishes();
         model.addAttribute("heading", "Top10");
         model.addAttribute("description", "W tej sekcji znajdziesz największe/najcięższe ryby");
         model.addAttribute("fishes", top10BigestFishes);
