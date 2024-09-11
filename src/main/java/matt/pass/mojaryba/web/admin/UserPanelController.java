@@ -1,6 +1,6 @@
 package matt.pass.mojaryba.web.admin;
 
-import matt.pass.mojaryba.domain.fish.FishSearchAndTopService;
+import matt.pass.mojaryba.domain.fish.FishSearchService;
 import matt.pass.mojaryba.domain.fish.FishService;
 import matt.pass.mojaryba.domain.fish.dto.FishDto;
 import matt.pass.mojaryba.domain.type.FishTypeService;
@@ -23,15 +23,15 @@ import java.util.List;
 @Controller
 public class UserPanelController {
     private final FishService fishService;
-    private final FishSearchAndTopService fishSearchAndTopService;
+    private final FishSearchService fishSearchService;
     private final FishTypeService fishTypeService;
     private final UserService userService;
     private final UserAdminService userAdminService;
 
-    public UserPanelController(FishService fishService, FishSearchAndTopService fishSearchAndTopService,
+    public UserPanelController(FishService fishService, FishSearchService fishSearchService,
                                FishTypeService fishTypeService, UserService userService, UserAdminService userAdminService) {
         this.fishService = fishService;
-        this.fishSearchAndTopService = fishSearchAndTopService;
+        this.fishSearchService = fishSearchService;
         this.fishTypeService = fishTypeService;
         this.userService = userService;
         this.userAdminService = userAdminService;
@@ -107,7 +107,7 @@ public class UserPanelController {
     @GetMapping("/panel/dziennik-polowow/szukaj")
     String fishingLogFind(Model model, @RequestParam String find, Authentication authentication) {
         final String userEmail = authentication.getName();
-        final List<FishDto> fishes = fishSearchAndTopService.searchInUserFishes(userEmail, find);
+        final List<FishDto> fishes = fishSearchService.searchInUserFishes(userEmail, find);
         String summary = String.format("Wyszukane okazy - %d szt.", fishes.size());
         sendAtributes(model, fishes, summary);
         return "user-panel-fishing-log";
