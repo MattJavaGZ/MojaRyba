@@ -65,11 +65,20 @@
 <!--                Edytuj okaz-->
 <!--            </a>-->
 
-            <a th:if="${!@favorite.isExist(fish)}" href="#" th:href="@{|/favorite/add/${fish.id}|}">
+<!--            <a th:if="${!@favorite.isExist(fish)}" href="#" th:href="@{|/favorite/add/${fish.id}|}">-->
+<!--                <i class="fa-regular fa-heart favorite-icon"></i>-->
+<!--                Dodaj do ulubionych-->
+<!--            </a>-->
+<!--            <a th:if="${@favorite.isExist(fish)}" href="#" th:href="@{|/favorite/delete/${fish.id}|}">-->
+<!--                <i class="fa-solid fa-heart favorite-icon"></i>-->
+<!--                Usuń z ulubionych-->
+<!--            </a>-->
+
+            <a th:if="${!favorites.contains(fish)}" href="#" th:href="@{|/favorite/add/${fish.id}|}">
                 <i class="fa-regular fa-heart favorite-icon"></i>
                 Dodaj do ulubionych
             </a>
-            <a th:if="${@favorite.isExist(fish)}" href="#" th:href="@{|/favorite/delete/${fish.id}|}">
+            <a th:if="${favorites.contains(fish)}" href="#" th:href="@{|/favorite/delete/${fish.id}|}">
                 <i class="fa-solid fa-heart favorite-icon"></i>
                 Usuń z ulubionych
             </a>
