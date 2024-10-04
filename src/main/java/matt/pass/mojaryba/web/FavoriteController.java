@@ -1,4 +1,5 @@
 package matt.pass.mojaryba.web;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import matt.pass.mojaryba.domain.favorite.FavoriteService;
 import matt.pass.mojaryba.domain.fish.dto.FishDto;
@@ -8,6 +9,9 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 @Controller
@@ -30,13 +34,24 @@ public class FavoriteController {
     @GetMapping("/favorite/add/{id}")
     String addToFavorite(@PathVariable long id, @CookieValue(value = "favorite", defaultValue = "") String favorite,
                          HttpServletResponse response, @RequestHeader String referer) {
-        favoriteService.addToFavorite(response, favorite, id);
+        final String updatedFavoroteCookie = favoriteService.addToFavorite(favorite, id);
+        createAndSendFavoriteCookie(response, updatedFavoroteCookie);
         return "redirect:" + referer;
     }
     @GetMapping("/favorite/delete/{id}")
     String deleteFromFavorite(@PathVariable long id,@CookieValue(value = "favorite", defaultValue = "") String favorite,
                               HttpServletResponse response,  @RequestHeader String referer) {
-        favoriteService.deleteWithFavorite(response, favorite, id);
+        final String updatedFavoroteCookie = favoriteService.deleteWithFavorite(favorite, id);
+        createAndSendFavoriteCookie(response, updatedFavoroteCookie);
         return "redirect:" + referer;
     }
+    private void createAndSendFavoriteCookie(HttpServletResponse response, String favorite) {
+        final Cookie cookie = new Cookie("favorite", URLEncoder.encode(favorite, StandardCharsets.UTF_8));
+        cookie.setMaxAge(365 * 24 * 60 * 60);
+        cookie.setPath("/");
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+    }
+
 }

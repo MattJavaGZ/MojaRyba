@@ -1,16 +1,12 @@
 package matt.pass.mojaryba.domain.favorite;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
-import matt.pass.mojaryba.domain.fish.Fish;
 import matt.pass.mojaryba.domain.fish.FishMapper;
 import matt.pass.mojaryba.domain.fish.FishRepository;
 import matt.pass.mojaryba.domain.fish.dto.FishDto;
 import org.springframework.stereotype.Service;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Service
@@ -28,34 +24,22 @@ public class FavoriteService {
         if (!favorite.isEmpty()) {
             final String[] split = favorite.split(";");
             for (String id : split) {
-                final Optional<Fish> fishById = fishRepository.findById(Long.valueOf(id.trim()));
-                if (fishById.isPresent()) {
-                    final FishDto fishToSave = FishMapper.map(fishById.get());
-                    favoritesList.add(fishToSave);
-                }
+                fishRepository.findById(Long.valueOf(id.trim()))
+                        .map(FishMapper::map)
+                        .ifPresent(favoritesList::add);
             }
         }
         return favoritesList;
     }
 
-    public void addToFavorite(HttpServletResponse response, String favoriteCookie, Long fishId) {
-        final String updateFavoriteCookie = favoriteCookie + fishId + ";";
-        createAndSendFavoriteCookie(response, updateFavoriteCookie);
+    public String addToFavorite(String favoriteCookie, Long fishId) {
+        return favoriteCookie + fishId + ";";
     }
 
-    public void deleteWithFavorite(HttpServletResponse response, String favoriteCookie, Long fishId) {
-        final String updateFavoriteCookie = favoriteCookie.replaceAll(fishId + ";", "");
-        createAndSendFavoriteCookie(response, updateFavoriteCookie);
+    public String deleteWithFavorite(String favoriteCookie, Long fishId) {
+        return favoriteCookie.replaceAll(fishId + ";", "");
     }
 
-    private void createAndSendFavoriteCookie(HttpServletResponse response, String favorite) {
-        final Cookie cookie = new Cookie("favorite", URLEncoder.encode(favorite, StandardCharsets.UTF_8));
-        cookie.setMaxAge(365 * 24 * 60 * 60);
-        cookie.setPath("/");
-        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
-        response.addCookie(cookie);
-    }
 
 }
 
