@@ -1,4 +1,4 @@
-package matt.pass.mojaryba.domain.email;
+package matt.pass.mojaryba.infrastructure.email;
 
 import matt.pass.mojaryba.domain.user.User;
 import org.apache.commons.mail.DefaultAuthenticator;
