@@ -25,7 +25,7 @@ public class FavoriteService {
             final String[] split = favorite.split(";");
             for (String id : split) {
                 fishRepository.findById(Long.valueOf(id.trim()))
-                        .map(FishMapper::map)
+                        .map(FishMapper::mapFishToFishDto)
                         .ifPresent(favoritesList::add);
             }
         }

@@ -51,7 +51,7 @@ public class FishManagementController {
         } else {
             final String userEmail = authentication.getName();
             final User user = userService.findUserByEmail(userEmail).orElseThrow();
-            final long savedFishId = fishService.saveFish(fish, user);
+            final long savedFishId = fishService.createFishFromForm(fish, user);
             redirectAttributes.addFlashAttribute(NOTIFICATION_ATTRIBUTE, "Okaz został dodany");
             return "redirect:/okaz/" + savedFishId;
         }
