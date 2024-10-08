@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,7 +53,7 @@ public class FishService {
         Pageable pageable = getPageable(page);
         return fishRepository.findAll(pageable)
                 .stream()
-                .map(FishMapper::map)
+                .map(FishMapper::mapFishToFishDto)
 //                .sorted()
                 .toList();
     }
@@ -71,7 +70,7 @@ public class FishService {
     public List<FishDto> findFishesByType(String typeName, int page) {
         Pageable pageable = getPageable(page);
         return fishRepository.findAllByFishType_Name(typeName, pageable).stream()
-                .map(FishMapper::map)
+                .map(FishMapper::mapFishToFishDto)
                 .toList();
     }
 
@@ -82,19 +81,19 @@ public class FishService {
 
     public Optional<FishDto> findById(long id) {
         return fishRepository.findById(id)
-                .map(FishMapper::map);
+                .map(FishMapper::mapFishToFishDto);
     }
 
     public List<FishDto> findAllByUserEmail(String userEmail) {
         return fishRepository.findAllByUser_Email(userEmail).stream()
-                .map(FishMapper::map)
+                .map(FishMapper::mapFishToFishDto)
                 .sorted()
                 .toList();
     }
 
     public List<FishDto> findAllByUserNick(String nick) {
         return fishRepository.findAllByUser_Nick(nick).stream()
-                .map(FishMapper::map)
+                .map(FishMapper::mapFishToFishDto)
                 .sorted()
                 .toList();
     }
@@ -103,7 +102,7 @@ public class FishService {
         return commentRepository.findAllByUser_Email(userEmail).stream()
                 .map(Comment::getFish)
                 .distinct()
-                .map(FishMapper::map)
+                .map(FishMapper::mapFishToFishDto)
                 .sorted()
                 .toList();
     }
@@ -111,7 +110,7 @@ public class FishService {
     public List<FishDto> findAllRatedFishesByUser(String userEmail) {
         return ratingRepository.findAllByUser_Email(userEmail).stream()
                 .map(Rating::getFish)
-                .map(FishMapper::map)
+                .map(FishMapper::mapFishToFishDto)
                 .sorted()
                 .toList();
     }
@@ -119,14 +118,14 @@ public class FishService {
     public List<FishDto> findAllLikedFishesByUser(String userEmail) {
         return likeRepository.findAllByUser_Email(userEmail).stream()
                 .map(Like::getFish)
-                .map(FishMapper::map)
+                .map(FishMapper::mapFishToFishDto)
                 .sorted()
                 .toList();
     }
 
     public List<FishDto> findFishesByTypeAndUser(String fishTypeName, String userEmail) {
         return fishRepository.findAllByFishType_NameAndUser_Email(fishTypeName, userEmail).stream()
-                .map(FishMapper::map)
+                .map(FishMapper::mapFishToFishDto)
                 .sorted()
                 .toList();
     }
@@ -135,32 +134,24 @@ public class FishService {
         return fishRepository.findAllByUser_Email(userEmail).stream()
                 .filter(fish -> fish.getDateAdded().isAfter(
                         start.atStartOfDay()) && fish.getDateAdded().isBefore(end.atStartOfDay().plusHours(24)))
-                .map(FishMapper::map)
+                .map(FishMapper::mapFishToFishDto)
                 .sorted()
                 .toList();
     }
 
     public FishToSaveDto findByIdToSave(long id) {
         return fishRepository.findById(id)
-                .map(FishMapper::mapToSave)
+                .map(FishMapper::mapFishToFishToSave)
                 .orElseThrow();
     }
 
-    public long saveFish(FishToSaveDto fishToSaveDto, User user) {
-        final Fish fish = new Fish();
-        fish.setTitle(fishToSaveDto.getTitle());
-        fish.setDateAdded(LocalDateTime.now());
-        fish.setDescription(fishToSaveDto.getDescription());
-        fish.setWeight(fishToSaveDto.getWeight());
-        fish.setLength(fishToSaveDto.getLength());
-        fish.setFishingMethod(fishToSaveDto.getFishingMethod());
-        fish.setBait(fishToSaveDto.getBait());
-        fish.setFishingSpot(fishToSaveDto.getFishingSpot());
+    public long createFishFromForm(FishToSaveDto fishToSaveDto, User user) {
         final FishType fishType = fishTypeRepository.findByName(fishToSaveDto.getFishType()).orElseThrow();
-        fish.setFishType(fishType);
-        fish.setUser(user);
+        Fish fish = FishMapper.mapFishToSaveToFish(fishToSaveDto, fishType, user);
+
         final Fish savedFish = fishRepository.save(fish);
         savePhotos(fishToSaveDto, savedFish);
+
         return savedFish.getId();
     }
 
@@ -195,11 +186,6 @@ public class FishService {
         if (!fishToSave.getPhotos().isEmpty()) {
             savePhotos(fishToSave, fishToEdit);
         }
-    }
-
-
-    public boolean fishDtoExist(FishDto fishDto) {
-        return fishRepository.existsById(fishDto.getId());
     }
 
     public void deleteFishById(long id) {
