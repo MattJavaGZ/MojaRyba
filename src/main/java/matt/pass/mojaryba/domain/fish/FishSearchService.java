@@ -25,7 +25,7 @@ public class FishSearchService {
 
     private List<FishDto> search(List<Fish> fishes, String userSearch) {
         return fishes.stream()
-                .map(FishMapper::map)
+                .map(FishMapper::mapFishToFishDto)
                 .filter(fish -> searchInFish(fish, userSearch))
                 .sorted()
                 .toList();
